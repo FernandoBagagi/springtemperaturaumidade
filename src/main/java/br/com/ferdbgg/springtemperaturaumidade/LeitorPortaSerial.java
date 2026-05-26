@@ -76,7 +76,7 @@ public class LeitorPortaSerial implements AutoCloseable {
 
         this.porta.setComPortTimeouts(
                 SerialPort.TIMEOUT_READ_SEMI_BLOCKING,
-                1000,
+                5000,
                 0);
 
         return this;
