@@ -33,7 +33,7 @@ public class LeituraSensor {
     @Column(nullable = false, precision = 5, scale = 2)
     private BigDecimal umidade;
 
-    public LeituraSensor(BigDecimal temperatura, BigDecimal umidade) {
+    public LeituraSensor(BigDecimal umidade, BigDecimal temperatura) {
         this.id = null;
         this.dataHora = LocalDateTime.now();
         this.temperatura = temperatura;

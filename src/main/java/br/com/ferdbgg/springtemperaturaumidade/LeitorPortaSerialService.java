@@ -50,12 +50,12 @@ public class LeitorPortaSerialService {
                     continue;
                 }
 
-                final var temperatura = new BigDecimal(dados[0].trim());
-                final var umidade = new BigDecimal(dados[1].trim());
+                final var umidade = new BigDecimal(dados[0].trim());
+                final var temperatura = new BigDecimal(dados[1].trim());
 
                 final var leitura = new LeituraSensor(
-                        temperatura,
-                        umidade);
+                        umidade,
+                        temperatura);
 
                 repository.save(leitura);
 
