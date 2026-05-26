@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import br.com.ferdbgg.springtemperaturaumidade.exceptions.LeitorPortaSerialException;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class LeitorPortaSerialService {
 
     private final LeituraSensorRepository repository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @EventListener(ApplicationReadyEvent.class)
     public void iniciarLeituraPortaSerial() {
@@ -56,6 +58,8 @@ public class LeitorPortaSerialService {
                         umidade);
 
                 repository.save(leitura);
+
+                messagingTemplate.convertAndSend("/topic/sensor", leitura);
 
             }
 
