@@ -20,10 +20,13 @@ public class LeitorPortaSerialService {
     private final SimpMessagingTemplate messagingTemplate;
 
     @EventListener(ApplicationReadyEvent.class)
-    public void iniciarLeituraPortaSerial() {
-        final Thread leitorDadosSerialThread = new Thread(this::lerDadosSerial);
-        leitorDadosSerialThread.setName("Thread-Leitor-Dados-Serial");
-        leitorDadosSerialThread.start();
+    public void iniciarThreadLeituraDadosSerial() {
+
+        final var threadLeituraDadosSerial = new Thread(this::lerDadosSerial);
+        threadLeituraDadosSerial.setName("Thread-Leitura-Dados-Serial");
+        
+        threadLeituraDadosSerial.start();
+
     }
 
     private void lerDadosSerial() {
@@ -42,8 +45,7 @@ public class LeitorPortaSerialService {
 
             while (scanner.hasNextLine()) {
 
-                final var linha = scanner.nextLine();
-                final var dados = linha.split(",");
+                final var dados = scanner.nextLine().split(",");
 
                 if (dados.length != 2) {
                     System.err.println("Dados inconsistentes");
