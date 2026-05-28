@@ -1,4 +1,4 @@
-package br.com.ferdbgg.springtemperaturaumidade;
+package br.com.ferdbgg.springtemperaturaumidade.leiturasensor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

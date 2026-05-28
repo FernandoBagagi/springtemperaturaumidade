@@ -1,4 +1,4 @@
-package br.com.ferdbgg.springtemperaturaumidade;
+package br.com.ferdbgg.springtemperaturaumidade.leiturasensor;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
