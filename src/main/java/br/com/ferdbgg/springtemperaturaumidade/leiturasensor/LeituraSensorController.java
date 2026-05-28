@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/leituras")
 @RequiredArgsConstructor
-public class LeituraController {
+public class LeituraSensorController {
 
     private final LeituraSensorRepository repository;
 
