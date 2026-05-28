@@ -12,6 +12,8 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 @Service
 public class TokenService {
 
+    public static final long ID_ERRO_VALIDACAO_TOKEN = -1L;
+
     private static final String ISSUER = "Spring Temperatura e Umidade";
     private static final String CLAIM_ID = "id";
     private static final long SEGUNDOS_VALIDADE_TOKEN = 2L * 60L * 60L; // 2h
@@ -19,8 +21,6 @@ public class TokenService {
     @Value("${springtemperaturaumidade.token.jwt.secret-key}")
     private String secret;
 
-    private final Algorithm algoritmo = Algorithm.HMAC256(secret);
-    
     public String tentarGerarToken(Usuario usuario) throws JWTCreationException {
 
         final var agora = Instant.now();
@@ -31,7 +31,7 @@ public class TokenService {
                 .withSubject(usuario.getUsername())
                 .withIssuedAt(agora)
                 .withExpiresAt(agora.plusSeconds(SEGUNDOS_VALIDADE_TOKEN))
-                .sign(algoritmo);
+                .sign(getAlgoritmo());
 
     }
 
@@ -39,7 +39,7 @@ public class TokenService {
 
         try {
 
-            return JWT.require(algoritmo)
+            return JWT.require(getAlgoritmo())
                     .withIssuer(ISSUER)
                     .build()
                     .verify(token)
@@ -47,9 +47,13 @@ public class TokenService {
 
         } catch (Exception e) {
 
-            return -1L;
+            return ID_ERRO_VALIDACAO_TOKEN;
 
         }
+    }
+
+    private Algorithm getAlgoritmo() {
+        return Algorithm.HMAC256(secret);
     }
 
 }
