@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class LeitorPortaSerialService {
 
+    private static final int NUMERO_ERROS_LEITURA_CONSECUTIVOS_TOLERAVEL = 10;
+
     private final LeituraSensorRepository repository;
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -24,7 +26,7 @@ public class LeitorPortaSerialService {
 
         final var threadLeituraDadosSerial = new Thread(this::lerDadosSerial);
         threadLeituraDadosSerial.setName("Thread-Leitura-Dados-Serial");
-        
+
         threadLeituraDadosSerial.start();
 
     }
@@ -43,21 +45,27 @@ public class LeitorPortaSerialService {
 
         try (final var scanner = new Scanner(stream)) {
 
+            var numeroErrosLeituraConsecutivos = 0;
+
             while (scanner.hasNextLine()) {
+
+                if (numeroErrosLeituraConsecutivos > NUMERO_ERROS_LEITURA_CONSECUTIVOS_TOLERAVEL) {
+                    throw new LeitorPortaSerialException("Ocorreram muitos erros de leitura.");
+                }
 
                 final var dados = scanner.nextLine().split(",");
 
-                if (dados.length != 2) {
-                    System.err.println("Dados inconsistentes");
+                if (dados.length == 2) {
+                    numeroErrosLeituraConsecutivos = 0;
+                } else {
+                    numeroErrosLeituraConsecutivos++;
                     continue;
                 }
 
                 final var umidade = new BigDecimal(dados[0].trim());
                 final var temperatura = new BigDecimal(dados[1].trim());
 
-                final var leitura = new LeituraSensor(
-                        umidade,
-                        temperatura);
+                final var leitura = new LeituraSensor(umidade, temperatura);
 
                 repository.save(leitura);
 
